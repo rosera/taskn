@@ -77,9 +77,9 @@ func deleteFile(filename string) error {
 }
 
 var taskCmd = &cobra.Command{
-	Use:   "owner",
-	Short: "Replace owner file with default QL_OWNER",
-	Long:  "Read an input CSV container filenames. Replace existing QL_OWNER file for each of the named files",
+	Use:   "runner",
+	Short: "Read the input file and perform a command",
+	Long:  "Read an input CSV container filenames. Repeat the named command per filename",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		inputFile, _ := cmd.Flags().GetString("input")
