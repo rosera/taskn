@@ -29,6 +29,7 @@ func main() {
 
   // If lab id not found - stop processing
   if gitBranchName == "" {
+    fmt.Print("gitBranchName is empty")
     return
   }
 
@@ -61,7 +62,7 @@ func main() {
   addCmd := "add " + input
 
   // Add file to staging 
-  gitCommandWithConfig(config, addCmd) 
+  err = gitCommandWithConfig(config, addCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -72,7 +73,7 @@ func main() {
   commitCmd := "commit -m 'New QL_OWNER'"
 
   // Add file to staging 
-  gitCommandWithConfig(config, commitCmd) 
+  err = gitCommandWithConfig(config, commitCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -83,7 +84,7 @@ func main() {
   pushCmd := "push origin " + gitBranchName + "-owner"
 
   // Add file to staging 
-  gitCommandWithConfig(config, pushCmd) 
+  err = gitCommandWithConfig(config, pushCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
