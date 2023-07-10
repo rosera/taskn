@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
   "os"
+  "regexp"
 )
 
 const (
@@ -21,16 +22,68 @@ func main() {
   var delimit = "/"
   input := filename + delimit + file
   
-	// Delete the original file
-	err := deleteFileIfExists(input)
+  // Task: Regex pattern for lab identifier
+  regexPattern := `(?:gsp[0-9]{4})` 
+  re := regexp.MustCompile(regexPattern)
+  gitBranchName := re.FindString(filename)
+
+  // If lab id not found - stop processing
+  if gitBranchName == "" {
+    return
+  }
+
+  // Task: Validate the file exists
+	err := fileExists(input)
 
 	if err != nil {
 	   fmt.Println(err)
      return
 	}   
 
-  // Create a new file
+  // Task: Delete the original file
+	err = deleteFile(input)
+
+	if err != nil {
+	   fmt.Println(err)
+     return
+	}   
+
+  // Task: Create a new file
   writeStringToFile(input, content) 
+
+	if err != nil {
+	   fmt.Println(err)
+     return
+	}   
+
+  // Task: git add on the new branch
+	config := "core.editor=vim"
+  addCmd := "add " + input
+
+  // Add file to staging 
+  gitCommandWithConfig(config, addCmd) 
+
+	if err != nil {
+	   fmt.Println(err)
+     return
+	}   
+
+  // Task: git commit on the new branch
+  commitCmd := "commit -m 'New QL_OWNER'"
+
+  // Add file to staging 
+  gitCommandWithConfig(config, commitCmd) 
+
+	if err != nil {
+	   fmt.Println(err)
+     return
+	}   
+
+  // Task: git push on the new branch
+  pushCmd := "push origin " + gitBranchName + "-owner"
+
+  // Add file to staging 
+  gitCommandWithConfig(config, pushCmd) 
 
 	if err != nil {
 	   fmt.Println(err)

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDeleteFileIfExists(t *testing.T) {
+func TestDeleteFile(t *testing.T) {
 	// Create a temporary file
 	file, err := ioutil.TempFile("", "testfile")
 	if err != nil {
@@ -15,7 +15,7 @@ func TestDeleteFileIfExists(t *testing.T) {
 	defer os.Remove(file.Name())
 
 	// Attempt to delete the file
-	err = deleteFileIfExists(file.Name())
+	err = deleteFile(file.Name())
 
 	// Verify that the file is deleted
 	_, statErr := os.Stat(file.Name())
@@ -23,17 +23,7 @@ func TestDeleteFileIfExists(t *testing.T) {
 		t.Errorf("File still exists, expected it to be deleted")
 	}
 
-	// Verify the error returned by deleteFileIfExists
-	if err != nil {
-		t.Errorf("Unexpected error: %v", err)
-	}
-}
-
-func TestDeleteFileIfExists_FileDoesNotExist(t *testing.T) {
-	// Attempt to delete a non-existent file
-	err := deleteFileIfExists("nonexistentfile.txt")
-
-	// Verify that the function returns without error
+	// Verify the error returned by deleteFile
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
