@@ -9,6 +9,9 @@ import (
 const (
   file    = "QL_OWNER"
   content = "# Lab Owner\nlab-architects@google.com # lab-architects@google.com\n"
+  branch  = "-lab-owner"
+  developer = "lab-architects"
+  email     = "lab-architects@google.com"
 )
 
 func main() {
@@ -23,21 +26,25 @@ func main() {
   input := filename + delimit + file
   
   // Task: Regex pattern for lab identifier
+  // ------------------------------------------------------------------------
   regexPattern := `(?:gsp[0-9]{1,4})` 
   re := regexp.MustCompile(regexPattern)
-  gitBranchName := re.FindString(filename)
+  labId := re.FindString(filename)
 
   // If lab id not found - stop processing
-  if gitBranchName == "" {
+  if labId == "" {
     fmt.Print("gitBranchName is empty")
     return
   }
 
+  // Task: Set a branch name
+  gitBranchName := labId + branch 
 
   // Task: Set Git config
+  // ------------------------------------------------------------------------
   configs := map[string]string{
-      "user.name": "$GIT_NAME",
-      "user.email": "$GIT_EMAIL",
+      "user.name": developer,
+      "user.email": email, 
   }
 
 	for key, value := range configs {
@@ -48,9 +55,22 @@ func main() {
 		}
 	}
   
+  // Task: git checkout new branch 
+  // ------------------------------------------------------------------------
+  fmt.Printf("BRANCH: %s\n", gitBranchName)
+  fmt.Printf("PATH: %s\n", filename)
+
+  // Add file to staging 
+  err := gitCheckoutCommand(filename, gitBranchName) 
+
+	if err != nil {
+	   fmt.Println(err)
+     return
+	}   
 
   // Task: Validate the file exists
-	err := fileExists(input)
+  // ------------------------------------------------------------------------
+	err = fileExists(input)
 
 	if err != nil {
 	   fmt.Println(err)
@@ -58,6 +78,7 @@ func main() {
 	}   
 
   // Task: Delete the original file
+  // ------------------------------------------------------------------------
 	err = deleteFile(input)
 
 	if err != nil {
@@ -66,6 +87,7 @@ func main() {
 	}   
 
   // Task: Create a new file
+  // ------------------------------------------------------------------------
   writeStringToFile(input, content) 
 
 	if err != nil {
@@ -75,12 +97,13 @@ func main() {
 
   // Task: git add on the new branch
 	// config := "core.editor=vim"
-  addCmd := "add " + file 
-
-  fmt.Printf("CMD: %s\n", addCmd)
+  // addCmd := "add " + file 
+  // ------------------------------------------------------------------------
+  fmt.Printf("File: %s\n", file)
+  fmt.Printf("PATH: %s\n", filename)
 
   // Add file to staging 
-  err = gitCommandWithConfig(input, addCmd) 
+  err = gitAddCommand(filename, file) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -88,10 +111,14 @@ func main() {
 	}   
 
   // Task: git commit on the new branch
-  commitCmd := "commit -m 'New QL_OWNER'"
+  // ------------------------------------------------------------------------
+  commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
+
+  fmt.Printf("MSG: %s\n", commitCmd)
+  fmt.Printf("PATH: %s\n", filename)
 
   // Add file to staging 
-  err = gitCommandWithConfig(input, commitCmd) 
+  err = gitCommitCommand(filename, commitCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -99,10 +126,14 @@ func main() {
 	}   
 
   // Task: git push on the new branch
-  pushCmd := "push origin " + gitBranchName + "-owner"
+  // ------------------------------------------------------------------------
+  pushCmd := gitBranchName
 
+  fmt.Printf("BRANCH: %s\n", pushCmd)
+  fmt.Printf("PATH: %s\n", filename)
+  
   // Add file to staging 
-  err = gitCommandWithConfig(input, pushCmd) 
+  err = gitPushCommand(filename, pushCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
