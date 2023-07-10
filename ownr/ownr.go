@@ -74,11 +74,13 @@ func main() {
 	}   
 
   // Task: git add on the new branch
-	// config := "core.editor=vim"
-  addCmd := "add " + input
+	config := "core.editor=vim"
+  addCmd := "add " + input 
+
+  fmt.Printf("CMD: %s\n", addCmd)
 
   // Add file to staging 
-  err = gitCommandWithConfig("", addCmd) 
+  err = gitCommandWithConfig(config, addCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -89,7 +91,7 @@ func main() {
   commitCmd := "commit -m 'New QL_OWNER'"
 
   // Add file to staging 
-  err = gitCommandWithConfig("", commitCmd) 
+  err = gitCommandWithConfig(config, commitCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -100,7 +102,7 @@ func main() {
   pushCmd := "push origin " + gitBranchName + "-owner"
 
   // Add file to staging 
-  err = gitCommandWithConfig("", pushCmd) 
+  err = gitCommandWithConfig(config, pushCmd) 
 
 	if err != nil {
 	   fmt.Println(err)

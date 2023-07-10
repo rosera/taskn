@@ -19,13 +19,14 @@ func setGitConfig(key, value string) error {
 
 
 func gitCommandWithConfig(config string, command string) error {
-	cmd := exec.Command("git", "-c", config, command)
+	// cmd := exec.Command("git", "-C", config, command)
+	cmd := exec.Command("git", "-C", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("failed to execute git command: %v", err)
+		return fmt.Errorf("failed to execute git command %s : %v", command, err)
 	}
 
 	return nil
