@@ -9,12 +9,12 @@ Add a command to perform on the filename read from the CSV.
 #### Long Form
 
 ```bash
-./taskn owner --input [FILENAME.csv]
+./taskn ownr --input [FILENAME.csv]
 ```
 
 #### Short Form
 ```bash
-./taskn owner -i [FILENAME.csv]
+./taskn ownr -i [FILENAME.csv]
 ```
 
 
