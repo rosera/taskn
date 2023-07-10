@@ -18,9 +18,9 @@ func setGitConfig(key, value string) error {
 }
 
 
-func gitCommandWithConfig(config string, command string) error {
+func gitCommandWithConfig(directory string, command string) error {
 	// cmd := exec.Command("git", "-C", config, command)
-	cmd := exec.Command("git", "-C", command)
+	cmd := exec.Command("git", "-C", directory, command)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
