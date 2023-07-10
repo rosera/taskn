@@ -23,7 +23,7 @@ func main() {
   input := filename + delimit + file
   
   // Task: Regex pattern for lab identifier
-  regexPattern := `(?:gsp[0-9]{4})` 
+  regexPattern := `(?:gsp[0-9]{1,4})` 
   re := regexp.MustCompile(regexPattern)
   gitBranchName := re.FindString(filename)
 
