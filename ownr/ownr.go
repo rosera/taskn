@@ -33,6 +33,22 @@ func main() {
     return
   }
 
+
+  // Task: Set Git config
+  configs := map[string]string{
+      "user.name": "$GIT_NAME",
+      "user.email": "$GIT_EMAIL",
+  }
+
+	for key, value := range configs {
+		err := setGitConfig(key, value)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
+  
+
   // Task: Validate the file exists
 	err := fileExists(input)
 
@@ -58,11 +74,11 @@ func main() {
 	}   
 
   // Task: git add on the new branch
-	config := "core.editor=vim"
+	// config := "core.editor=vim"
   addCmd := "add " + input
 
   // Add file to staging 
-  err = gitCommandWithConfig(config, addCmd) 
+  err = gitCommandWithConfig("", addCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -73,7 +89,7 @@ func main() {
   commitCmd := "commit -m 'New QL_OWNER'"
 
   // Add file to staging 
-  err = gitCommandWithConfig(config, commitCmd) 
+  err = gitCommandWithConfig("", commitCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
@@ -84,7 +100,7 @@ func main() {
   pushCmd := "push origin " + gitBranchName + "-owner"
 
   // Add file to staging 
-  err = gitCommandWithConfig(config, pushCmd) 
+  err = gitCommandWithConfig("", pushCmd) 
 
 	if err != nil {
 	   fmt.Println(err)
