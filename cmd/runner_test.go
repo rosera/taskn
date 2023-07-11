@@ -39,15 +39,15 @@ func TestTaskCmd(t *testing.T) {
 		t.Fatalf("Task command failed: %s", err)
 	}
 
-// 	// Assert the existence of QL_OWNER files for each input filename
-// 	for _, record := range testData {
-// 		for _, filename := range record {
-// 			qlOwnerFilename := filename + "_QL_OWNER"
-// 			_, err := os.Stat(qlOwnerFilename)
-// 			if err != nil {
-// 				t.Errorf("QL_OWNER file %s was not created: %s", qlOwnerFilename, err)
-// 			}
-// 			defer os.Remove(qlOwnerFilename)
-// 		}
-// 	}
+	// 	// Assert the existence of QL_OWNER files for each input filename
+	// 	for _, record := range testData {
+	// 		for _, filename := range record {
+	// 			qlOwnerFilename := filename + "_QL_OWNER"
+	// 			_, err := os.Stat(qlOwnerFilename)
+	// 			if err != nil {
+	// 				t.Errorf("QL_OWNER file %s was not created: %s", qlOwnerFilename, err)
+	// 			}
+	// 			defer os.Remove(qlOwnerFilename)
+	// 		}
+	// 	}
 }
