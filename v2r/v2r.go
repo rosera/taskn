@@ -22,8 +22,8 @@ func main() {
 
 	filename := os.Args[1]
 
-	var delimit = "/"
-	input := filename + delimit + file
+//	var delimit = "/"
+//	input := filename + delimit + file
 
 	// Task: Regex pattern for lab identifier
 	// ------------------------------------------------------------------------
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	// Task: Set a branch name
-	gitBranchName := labId + branch
+	// gitBranchName := labId + branch
 
 	// Task: Set Git config
 	// ------------------------------------------------------------------------
@@ -55,13 +55,29 @@ func main() {
 		}
 	}
 
-	// Task: git checkout new branch
-	// ------------------------------------------------------------------------
-	fmt.Printf("BRANCH: %s\n", gitBranchName)
-	fmt.Printf("PATH: %s\n", filename)
+//	// Task: git checkout new branch
+//	// ------------------------------------------------------------------------
+//	fmt.Printf("BRANCH: %s\n", gitBranchName)
+//	fmt.Printf("PATH: %s\n", filename)
+//
+//	// Add file to staging
+//	err := gitCheckoutCommand(filename, gitBranchName)
+//
+//	if err != nil {
+//		fmt.Println(err)
+//		return
+//	}
 
-	// Add file to staging
-	err := gitCheckoutCommand(filename, gitBranchName)
+
+	// Task: Set the file names 
+	// ------------------------------------------------------------------------
+  sourceFile := "qwiklabs.yaml"
+	destinationFile := "qwiklabs.backup"
+
+	// Task: Validate the file exists
+	// ------------------------------------------------------------------------
+  err := fileExists(sourceFile)
+  // err := fileExists(input)
 
 	if err != nil {
 		fmt.Println(err)
@@ -70,16 +86,16 @@ func main() {
 
 	// Task: Validate the file exists
 	// ------------------------------------------------------------------------
-	err = fileExists(input)
 
+	err = copyFile(sourceFile, destinationFile)
 	if err != nil {
 		fmt.Println(err)
-		return
 	}
 
 	// Task: Delete the original file
 	// ------------------------------------------------------------------------
-	err = deleteYamlFile(input)
+	err = deleteYamlFile(sourceFile)
+	// err = deleteYamlFile(input)
 
 	if err != nil {
 		fmt.Println(err)
@@ -88,55 +104,55 @@ func main() {
 
 	// Task: Create a new file
 	// ------------------------------------------------------------------------
-	writeYamlToFile(input, content)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+//	writeYamlToFile(input, content)
+//
+//	if err != nil {
+//		fmt.Println(err)
+//		return
+//	}
 
 	// Task: git add on the new branch
 	// config := "core.editor=vim"
 	// addCmd := "add " + file
 	// ------------------------------------------------------------------------
-	fmt.Printf("File: %s\n", file)
-	fmt.Printf("PATH: %s\n", filename)
-
-	// Add file to staging
-	err = gitAddCommand(filename, file)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	// Task: git commit on the new branch
-	// ------------------------------------------------------------------------
-	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
-
-	fmt.Printf("MSG: %s\n", commitCmd)
-	fmt.Printf("PATH: %s\n", filename)
-
-	// Add file to staging
-	err = gitCommitCommand(filename, commitCmd)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+// 	fmt.Printf("File: %s\n", file)
+// 	fmt.Printf("PATH: %s\n", filename)
+// 
+// 	// Add file to staging
+// 	err = gitAddCommand(filename, file)
+// 
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 
+// 	// Task: git commit on the new branch
+// 	// ------------------------------------------------------------------------
+// 	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
+// 
+// 	fmt.Printf("MSG: %s\n", commitCmd)
+// 	fmt.Printf("PATH: %s\n", filename)
+// 
+// 	// Add file to staging
+// 	err = gitCommitCommand(filename, commitCmd)
+// 
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
 
 	// Task: git push on the new branch
 	// ------------------------------------------------------------------------
-	pushCmd := gitBranchName
-
-	fmt.Printf("BRANCH: %s\n", pushCmd)
-	fmt.Printf("PATH: %s\n", filename)
-
-	// Add file to staging
-	err = gitPushCommand(filename, pushCmd)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+//	pushCmd := gitBranchName
+//
+//	fmt.Printf("BRANCH: %s\n", pushCmd)
+//	fmt.Printf("PATH: %s\n", filename)
+//
+//	// Add file to staging
+//	err = gitPushCommand(filename, pushCmd)
+//
+//	if err != nil {
+//		fmt.Println(err)
+//		return
+//	}
 }
