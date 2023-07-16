@@ -14,7 +14,7 @@ func deleteYamlFile(filename string) error {
 		return fmt.Errorf("failed to delete file: %v", err)
 	}
 
- // fmt.Println("deleteYamlFile")
+	// fmt.Println("deleteYamlFile")
 
 	// File deleted successfully
 	return nil
