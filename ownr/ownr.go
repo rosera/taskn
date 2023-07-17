@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-  "os"
-  "regexp"
+	"os"
+	"regexp"
 )
 
 const (
-  file    = "QL_OWNER"
-  content = "# Lab Owner\nlab-architects@google.com # lab-architects@google.com\n"
-  branch  = "-lab-owner"
-  developer = "lab-architects"
-  email     = "lab-architects@google.com"
+	file      = "QL_OWNER"
+	content   = "# Lab Owner\nlab-architects@google.com # lab-architects@google.com\n"
+	branch    = "-lab-owner"
+	developer = "lab-architects"
+	email     = "lab-architects@google.com"
 )
 
 func main() {
@@ -22,30 +22,31 @@ func main() {
 
 	filename := os.Args[1]
 
-  var delimit = "/"
-  input := filename + delimit + file
-  
-  // Task: Regex pattern for lab identifier
-  // ------------------------------------------------------------------------
-  regexPattern := `(?:gsp[0-9]{1,4})` 
-  re := regexp.MustCompile(regexPattern)
-  labId := re.FindString(filename)
+	var delimit = "/"
+	input := filename + delimit + file
 
-  // If lab id not found - stop processing
-  if labId == "" {
-    fmt.Print("gitBranchName is empty")
-    return
-  }
+	// Task: Regex pattern for lab identifier
+	// Match GSPXXXX | gspXXXX
+	// ------------------------------------------------------------------------
+	regexPattern := `(?:gsp|GSP[0-9]{1,4})`
+	re := regexp.MustCompile(regexPattern)
+	labId := re.FindString(filename)
 
-  // Task: Set a branch name
-  gitBranchName := labId + branch 
+	// If lab id not found - stop processing
+	if labId == "" {
+		fmt.Print("gitBranchName is empty")
+		return
+	}
 
-  // Task: Set Git config
-  // ------------------------------------------------------------------------
-  configs := map[string]string{
-      "user.name": developer,
-      "user.email": email, 
-  }
+	// Task: Set a branch name
+	gitBranchName := labId + branch
+
+	// Task: Set Git config
+	// ------------------------------------------------------------------------
+	configs := map[string]string{
+		"user.name":  developer,
+		"user.email": email,
+	}
 
 	for key, value := range configs {
 		err := setGitConfig(key, value)
@@ -54,89 +55,89 @@ func main() {
 			os.Exit(1)
 		}
 	}
-  
-  // Task: git checkout new branch 
-  // ------------------------------------------------------------------------
-  fmt.Printf("BRANCH: %s\n", gitBranchName)
-  fmt.Printf("PATH: %s\n", filename)
 
-  // Add file to staging 
-  err := gitCheckoutCommand(filename, gitBranchName) 
+	// Task: git checkout new branch
+	// ------------------------------------------------------------------------
+	fmt.Printf("BRANCH: %s\n", gitBranchName)
+	fmt.Printf("PATH: %s\n", filename)
+
+	// Add file to staging
+	err := gitCheckoutCommand(filename, gitBranchName)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
 
-  // Task: Validate the file exists
-  // ------------------------------------------------------------------------
+	// Task: Validate the file exists
+	// ------------------------------------------------------------------------
 	err = fileExists(input)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
 
-  // Task: Delete the original file
-  // ------------------------------------------------------------------------
+	// Task: Delete the original file
+	// ------------------------------------------------------------------------
 	err = deleteFile(input)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
 
-  // Task: Create a new file
-  // ------------------------------------------------------------------------
-  writeStringToFile(input, content) 
+	// Task: Create a new file
+	// ------------------------------------------------------------------------
+	writeStringToFile(input, content)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
 
-  // Task: git add on the new branch
+	// Task: git add on the new branch
 	// config := "core.editor=vim"
-  // addCmd := "add " + file 
-  // ------------------------------------------------------------------------
-  fmt.Printf("File: %s\n", file)
-  fmt.Printf("PATH: %s\n", filename)
+	// addCmd := "add " + file
+	// ------------------------------------------------------------------------
+	fmt.Printf("File: %s\n", file)
+	fmt.Printf("PATH: %s\n", filename)
 
-  // Add file to staging 
-  err = gitAddCommand(filename, file) 
-
-	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
-
-  // Task: git commit on the new branch
-  // ------------------------------------------------------------------------
-  commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
-
-  fmt.Printf("MSG: %s\n", commitCmd)
-  fmt.Printf("PATH: %s\n", filename)
-
-  // Add file to staging 
-  err = gitCommitCommand(filename, commitCmd) 
+	// Add file to staging
+	err = gitAddCommand(filename, file)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
 
-  // Task: git push on the new branch
-  // ------------------------------------------------------------------------
-  pushCmd := gitBranchName
+	// Task: git commit on the new branch
+	// ------------------------------------------------------------------------
+	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
 
-  fmt.Printf("BRANCH: %s\n", pushCmd)
-  fmt.Printf("PATH: %s\n", filename)
-  
-  // Add file to staging 
-  err = gitPushCommand(filename, pushCmd) 
+	fmt.Printf("MSG: %s\n", commitCmd)
+	fmt.Printf("PATH: %s\n", filename)
+
+	// Add file to staging
+	err = gitCommitCommand(filename, commitCmd)
 
 	if err != nil {
-	   fmt.Println(err)
-     return
-	}   
+		fmt.Println(err)
+		return
+	}
+
+	// Task: git push on the new branch
+	// ------------------------------------------------------------------------
+	pushCmd := gitBranchName
+
+	fmt.Printf("BRANCH: %s\n", pushCmd)
+	fmt.Printf("PATH: %s\n", filename)
+
+	// Add file to staging
+	err = gitPushCommand(filename, pushCmd)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }

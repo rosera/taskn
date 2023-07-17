@@ -8,7 +8,7 @@ import (
 
 func TestWriteStringToFile(t *testing.T) {
 
-  filename := file 
+	filename := file
 
 	// Call the function being tested
 	err := writeStringToFile(filename, content)

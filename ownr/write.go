@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-  "io/ioutil"
+	"io/ioutil"
 )
 
 func writeStringToFile(filename string, content string) error {
