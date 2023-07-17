@@ -28,7 +28,7 @@ func main() {
 	// Task: Regex pattern for lab identifier
 	// Match GSPXXXX | gspXXXX
 	// ------------------------------------------------------------------------
-	regexPattern := `(?:gsp|GSP[0-9]{1,4})`
+	regexPattern := `(?:gsp[0-9]{1,4}|GSP[0-9]{1,4})`
 	re := regexp.MustCompile(regexPattern)
 	labId := re.FindString(filename)
 
