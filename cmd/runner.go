@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"io"
 	"os"
-  "os/exec"
+	"os/exec"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 	nameToken  = "lab-architects@google.com"
 )
 
-var	cmdToken string 
+var cmdToken string
 
 func apiOwnerUpdate(emailToken, nameToken, filename string) {
 	fmt.Println("# Lab Owner")
@@ -67,7 +67,6 @@ func writeFile(filename string) error {
 	return nil
 }
 
-
 func deleteFile(filename string) error {
 	err := os.Remove(filename)
 	if err != nil {
@@ -94,12 +93,12 @@ var taskCmd = &cobra.Command{
 			return
 		}
 
-    exists := commandExists(taskCommand)
+		exists := commandExists(taskCommand)
 
-    if !exists {
+		if !exists {
 			fmt.Printf("%s not found on path\n", taskCommand)
 			return
-    }
+		}
 
 		file, err := os.Open(inputFile)
 		if err != nil {
@@ -121,16 +120,16 @@ var taskCmd = &cobra.Command{
 			}
 
 			for _, filename := range record {
-//				if err := writeFile(filename + "_QL_OWNER"); err != nil {
-//					fmt.Printf("Error writing QL_OWNER file: %s\n", err)
-//				}
-//          fmt.Printf("Execute: %s on %s\n",taskCommand, filename)
-          output, err := executeCommand(taskCommand, filename) 
-          if err != nil {
-             fmt.Printf("Execution failed: %s\n", err)
-          } else {
-            fmt.Printf("Output: %s", output)
-          }	
+				//				if err := writeFile(filename + "_QL_OWNER"); err != nil {
+				//					fmt.Printf("Error writing QL_OWNER file: %s\n", err)
+				//				}
+				//          fmt.Printf("Execute: %s on %s\n",taskCommand, filename)
+				output, err := executeCommand(taskCommand, filename)
+				if err != nil {
+					fmt.Printf("Execution failed: %s\n", err)
+				} else {
+					fmt.Printf("Output: %s", output)
+				}
 			}
 		}
 	},
