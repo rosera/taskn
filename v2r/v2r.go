@@ -25,8 +25,8 @@ func main() {
 	// ------------------------------------------------------------------------
 	folderPath := os.Args[1]
 
-	var delimit = "/"
-	input := folderPath + delimit + file
+	// var delimit = "/"
+	// input := folderPath + delimit + file
 
 	// Task: Set Git config
 	// ------------------------------------------------------------------------
@@ -63,10 +63,10 @@ func main() {
 	// ------------------------------------------------------------------------
 	fmt.Printf("BRANCH: %s\n", gitBranchName)
 	fmt.Printf("PATH: %s\n", folderPath)
-	
-	// Add file to staging
-	err := gitCheckoutCommand(folderPath, gitBranchName)
-	
+
+	// Switch to new branch
+	err := gitNewCheckoutCommand(folderPath, gitBranchName)
+
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -113,40 +113,40 @@ func main() {
 	for i := range v2schema.Environment.Resources {
 		// TODO: Set the defaults
 		if v2schema.Environment.Resources[i].Type == "gcp_project" {
-			 v2schema.Environment.Resources[i].Variant = "gcpd"
-			 v2schema.Environment.Resources[i].AllowedLocations = []string{"us-central1"}
+			v2schema.Environment.Resources[i].Variant = "gcpd"
+			v2schema.Environment.Resources[i].AllowedLocations = []string{"us-central1"}
 		}
 	}
 
-	//  v2schema.UpdateV2SchemaLocation("baseline")
 	// TODO: Write the updated V2 content to folder/qwiklabs.yaml
 	v2schema.WriteV2Schema(sourceFile, "baseline")
 
 	// Task: git add on the new branch
 	// ------------------------------------------------------------------------
-	config := "core.editor=vim"
-	addCmd := "add " + file
+	// config := "core.editor=vim"
+	// addCmd := "add " + file
+
 	fmt.Printf("File: %s\n", sourceFile)
 	fmt.Printf("PATH: %s\n", folderPath)
 	//
 	// Add file to staging
 	err = gitAddCommand(folderPath, file)
-	
+
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	
+
 	// Task: git commit on the new branch
 	// ------------------------------------------------------------------------
 	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
-	
+
 	fmt.Printf("MSG: %s\n", commitCmd)
 	fmt.Printf("PATH: %s\n", folderPath)
-	
+
 	// Add file to staging
 	err = gitCommitCommand(folderPath, commitCmd)
-	
+
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -155,13 +155,21 @@ func main() {
 	// Task: git push on the new branch
 	// ------------------------------------------------------------------------
 	pushCmd := gitBranchName
-	
+
 	fmt.Printf("BRANCH: %s\n", pushCmd)
 	fmt.Printf("PATH: %s\n", folderPath)
-	
+
 	// Add file to staging
 	err = gitPushCommand(folderPath, pushCmd)
-	
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Switch to the main branch
+	err = gitMainCheckoutCommand(folderPath, gitBranchName)
+
 	if err != nil {
 		fmt.Println(err)
 		return

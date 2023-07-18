@@ -20,7 +20,26 @@ func setGitConfig(key, value string) error {
 // Task: git checkout - switch to a new branch
 // git checkout -b [branch]
 // ------------------------------------------------------------------------
-func gitCheckoutCommand(directory string, branch string) error {
+func gitMainCheckoutCommand(directory string, branch string) error {
+	cmd := exec.Command("git", "-C", directory, "checkout", branch)
+	fmt.Printf("Cmd: %s\n", cmd)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Printf("Stdout: %s\n", cmd.Stderr)
+		fmt.Printf("Stderr: %s\n", cmd.Stderr)
+		return fmt.Errorf("Git failed to execute Add command %s : %v", cmd, err)
+	}
+
+	return nil
+}
+
+// Task: git checkout - switch to a new branch
+// git checkout -b [branch]
+// ------------------------------------------------------------------------
+func gitNewCheckoutCommand(directory string, branch string) error {
 	cmd := exec.Command("git", "-C", directory, "checkout", "-b", branch)
 	fmt.Printf("Cmd: %s\n", cmd)
 	cmd.Stdout = os.Stdout
@@ -59,7 +78,7 @@ func gitAddCommand(directory string, file string) error {
 // git commit -m "Add: QL_OWNER"
 // ------------------------------------------------------------------------
 func gitCommitCommand(directory string, msg string) error {
-	cmd := exec.Command("git", "-C", directory, "commit", "-m", msg)
+	cmd := exec.Command("git", "-C", directory, "commit", "-m", "QL_OWNER Replace", "-m", msg)
 	fmt.Printf("Cmd: %s\n", cmd)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
