@@ -23,26 +23,10 @@ func main() {
 	// TODO: Argument is folder/path
 	// Task: Read the folder argument
 	// ------------------------------------------------------------------------
-	filename := os.Args[1]
+	folderPath := os.Args[1]
 
-	//	var delimit = "/"
-	//	input := filename + delimit + file
-
-	// Task: Regex pattern for lab identifier
-	// ------------------------------------------------------------------------
-	regexPattern := `(?:gsp[0-9]{1,4})`
-	re := regexp.MustCompile(regexPattern)
-	labId := re.FindString(filename)
-
-	// If lab id not found - stop processing
-	if labId == "" {
-		fmt.Print("gitBranchName is empty")
-		return
-	}
-
-	// Task: Set a branch name
-	// ------------------------------------------------------------------------
-	// gitBranchName := labId + branch
+	var delimit = "/"
+	input := folderPath + delimit + file
 
 	// Task: Set Git config
 	// ------------------------------------------------------------------------
@@ -59,28 +43,43 @@ func main() {
 		}
 	}
 
-	//	// Task: git checkout new branch
-	//	// ------------------------------------------------------------------------
-	//	fmt.Printf("BRANCH: %s\n", gitBranchName)
-	//	fmt.Printf("PATH: %s\n", filename)
-	//
-	//	// Add file to staging
-	//	err := gitCheckoutCommand(filename, gitBranchName)
-	//
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return
-	//	}
+	// Task: Regex pattern for lab identifier
+	// ------------------------------------------------------------------------
+	regexPattern := `(?:gsp[0-9]{1,4}|GSP[0-9]{1,4})`
+	re := regexp.MustCompile(regexPattern)
+	labId := re.FindString(folderPath)
+
+	// If lab id not found - stop processing
+	if labId == "" {
+		fmt.Print("gitBranchName is empty")
+		return
+	}
+
+	// Task: Set a branch name
+	// ------------------------------------------------------------------------
+	gitBranchName := labId + branch
+
+	// Task: git checkout new branch
+	// ------------------------------------------------------------------------
+	fmt.Printf("BRANCH: %s\n", gitBranchName)
+	fmt.Printf("PATH: %s\n", folderPath)
+	
+	// Add file to staging
+	err := gitCheckoutCommand(folderPath, gitBranchName)
+	
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Task: Set the file names
 	// ------------------------------------------------------------------------
-	sourceFile := "qwiklabs.yaml"
-	destinationFile := "qwiklabs.backup"
+	sourceFile := folderPath + "qwiklabs.yaml"
+	destinationFile := folderPath + "qwiklabs.backup"
 
 	// Task: Validate the file exists
 	// ------------------------------------------------------------------------
-	err := fileExists(sourceFile)
-	// err := fileExists(input)
+	err = fileExists(sourceFile)
 
 	if err != nil {
 		fmt.Println(err)
@@ -89,11 +88,6 @@ func main() {
 
 	// Task: Validate the file exists
 	// ------------------------------------------------------------------------
-
-	// TODO: Append the source folder to the file:
-	// sourceFile: gcp-spl-content/labs/gsp001-creating-a-vm/qwiklabs.yaml
-	// destinationFile: gcp-spl-content/labs/gsp001-creating-a-vm/qwiklabs.yaml
-
 	err = copyFile(sourceFile, destinationFile)
 	if err != nil {
 		fmt.Println(err)
@@ -101,11 +95,7 @@ func main() {
 
 	// Task: Delete the original file
 	// ------------------------------------------------------------------------
-	// TODO: Append the source folder to the file:
-	// gcp-spl-content/labs/gsp001-creating-a-vm/qwiklabs.yaml
-
 	err = deleteYamlFile(sourceFile)
-	// err = deleteYamlFile(input)
 
 	if err != nil {
 		fmt.Println(err)
@@ -123,64 +113,57 @@ func main() {
 	for i := range v2schema.Environment.Resources {
 		// TODO: Set the defaults
 		if v2schema.Environment.Resources[i].Type == "gcp_project" {
-			v2schema.Environment.Resources[i].Variant = "gcpd"
-			v2schema.Environment.Resources[i].AllowedLocations = []string{"us-central1"}
+			 v2schema.Environment.Resources[i].Variant = "gcpd"
+			 v2schema.Environment.Resources[i].AllowedLocations = []string{"us-central1"}
 		}
 	}
 
 	//  v2schema.UpdateV2SchemaLocation("baseline")
 	// TODO: Write the updated V2 content to folder/qwiklabs.yaml
-	v2schema.WriteV2Schema("qwiklabs.yaml", "baseline")
-
-	//	writeYamlToFile(backupFile, "location")
-	//
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return
-	//	}
+	v2schema.WriteV2Schema(sourceFile, "baseline")
 
 	// Task: git add on the new branch
-	// config := "core.editor=vim"
-	// addCmd := "add " + file
 	// ------------------------------------------------------------------------
-	// 	fmt.Printf("File: %s\n", file)
-	// 	fmt.Printf("PATH: %s\n", filename)
+	config := "core.editor=vim"
+	addCmd := "add " + file
+	fmt.Printf("File: %s\n", sourceFile)
+	fmt.Printf("PATH: %s\n", folderPath)
 	//
-	// 	// Add file to staging
-	// 	err = gitAddCommand(filename, file)
-	//
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
-	//
-	// 	// Task: git commit on the new branch
-	// 	// ------------------------------------------------------------------------
-	// 	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
-	//
-	// 	fmt.Printf("MSG: %s\n", commitCmd)
-	// 	fmt.Printf("PATH: %s\n", filename)
-	//
-	// 	// Add file to staging
-	// 	err = gitCommitCommand(filename, commitCmd)
-	//
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		return
-	// 	}
+	// Add file to staging
+	err = gitAddCommand(folderPath, file)
+	
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
+	// Task: git commit on the new branch
+	// ------------------------------------------------------------------------
+	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
+	
+	fmt.Printf("MSG: %s\n", commitCmd)
+	fmt.Printf("PATH: %s\n", folderPath)
+	
+	// Add file to staging
+	err = gitCommitCommand(folderPath, commitCmd)
+	
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Task: git push on the new branch
 	// ------------------------------------------------------------------------
-	//	pushCmd := gitBranchName
-	//
-	//	fmt.Printf("BRANCH: %s\n", pushCmd)
-	//	fmt.Printf("PATH: %s\n", filename)
-	//
-	//	// Add file to staging
-	//	err = gitPushCommand(filename, pushCmd)
-	//
-	//	if err != nil {
-	//		fmt.Println(err)
-	//		return
-	//	}
+	pushCmd := gitBranchName
+	
+	fmt.Printf("BRANCH: %s\n", pushCmd)
+	fmt.Printf("PATH: %s\n", folderPath)
+	
+	// Add file to staging
+	err = gitPushCommand(folderPath, pushCmd)
+	
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
