@@ -60,9 +60,7 @@ func main() {
 	// ------------------------------------------------------------------------
 	fmt.Printf("BRANCH: %s\n", gitBranchName)
 	fmt.Printf("PATH: %s\n", filename)
-
-	// Add file to staging
-	err := gitCheckoutCommand(filename, gitBranchName)
+	err := gitNewCheckoutCommand(filename, gitBranchName)
 
 	if err != nil {
 		fmt.Println(err)
@@ -113,7 +111,7 @@ func main() {
 
 	// Task: git commit on the new branch
 	// ------------------------------------------------------------------------
-	commitCmd := fmt.Sprintf("%q", "Add: New QL_OWNER")
+	commitCmd := fmt.Sprintf("%q", "Replace QL_OWNER with default owner file")
 
 	fmt.Printf("MSG: %s\n", commitCmd)
 	fmt.Printf("PATH: %s\n", filename)
@@ -140,4 +138,14 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
+	// Task: git checkout new branch
+	// ------------------------------------------------------------------------
+	err = gitMainCheckoutCommand(filename, "main")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 }
